@@ -9,6 +9,7 @@ SECRET_KEY = 'django-insecure-1hqwnmqu=nn8g2k1flew8j9ire(^0jg766#jur5_7h(b1xg89$
 DEBUG = True
 ALLOWED_HOSTS = []
 
+# التطبيقات المثبتة
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -26,11 +27,12 @@ INSTALLED_APPS = [
 
 # إعدادات Cloudinary
 cloudinary.config( 
-  cloud_name = 'dppad5bqn', 
-  api_key = '732138356246461', 
-  api_secret = 'jUzgU97Po2b3dnxB00Y9102WKSc' 
+    cloud_name = 'dppad5bqn', 
+    api_key = '732138356246461', 
+    api_secret = 'jUzgU97Po2b3dnxB00Y9102WKSc' 
 )
 
+# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -43,6 +45,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'workshop.urls'
 
+# القوالب
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -60,6 +63,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'workshop.wsgi.application'
 
+# قاعدة البيانات
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -67,6 +71,7 @@ DATABASES = {
     }
 }
 
+# تحقق كلمات المرور
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
@@ -74,13 +79,30 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
 ]
 
+# اللغة والتوقيت
 LANGUAGE_CODE = 'ar'
 TIME_ZONE = 'Asia/Riyadh'
 
 USE_I18N = True
 USE_TZ = True
 
+# الملفات الثابتة
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ==== إعدادات الإيميل (Gmail SMTP) ====
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'khawlahalthafi@gmail.com'
+
+EMAIL_HOST_PASSWORD = 'nyrstbtakcnwvpet'
+
+EMAIL_TIMEOUT = 20
+# (ملاحظة أمان: الأفضل استخدام متغير بيئة بدل كتابتها مباشرة)

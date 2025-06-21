@@ -12,7 +12,11 @@ class UserRegisterForm(forms.ModelForm):
     email = forms.EmailField(label='البريد الإلكتروني')
     password = forms.CharField(label='كلمة المرور', widget=forms.PasswordInput)
     password2 = forms.CharField(label='تأكيد كلمة المرور', widget=forms.PasswordInput)
+    
+    phone_number = forms.CharField(label='رقم الجوال', max_length=20, required=False)
+    address = forms.CharField(label='العنوان', widget=forms.Textarea(attrs={'rows': 3}), required=False)
 
+    # هذا مهم جدًا — يربط الفورم بالـ User Model
     class Meta:
         model = User
         fields = ('username', 'first_name', 'email')

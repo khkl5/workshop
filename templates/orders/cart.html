@@ -6,15 +6,16 @@
     <title>سلة التسوق</title>
     <style>
         body {
+            margin: 0;
+            padding: 0;
             background-color: #FBF1EA;
             font-family: Arial, sans-serif;
-            padding: 20px;
             text-align: center;
         }
 
         .cart-container {
             width: 90%;
-            margin: 0 auto;
+            margin: 20px auto;
             max-width: 1000px;
             background-color: white;
             border-radius: 10px;
@@ -77,78 +78,94 @@
         .checkout-button:hover {
             background-color: #e5304b;
         }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #23307E;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #1a245c;
+        }
     </style>
 </head>
 <body>
-        {% include 'header.html' %}
 
+    {% include 'header.html' %}
 
-    <h2>🛒 سلة التسوق</h2>
-<div class="cart-container">
+    <h2 style="margin-top: 20px;">🛒 سلة التسوق</h2>
 
-    {% if cart_items %}
-        {% for item in cart_items %}
-            <div class="cart-item" style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; padding: 15px 0;">
-                
-                <!-- زر الحذف -->
-                <form method="post" action="{% url 'decrease_cart_item' item.id %}">
-                    {% csrf_token %}
-                    <button type="submit" style="background-color: #FF3D57; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 16px;">×</button>
-                </form>
+    <div class="cart-container">
 
-                <!-- السعر والكمية -->
-                <div style="flex: 1; text-align: right; margin-right: 15px;">
-                    <p style="font-size: 16px;">المجموع: {{ item.subtotal }} ريال</p>
+        {% if cart_items %}
+            {% for item in cart_items %}
+                <div class="cart-item">
 
-                    <div style="display: flex; align-items: center; justify-content: center; margin-top: 10px;">
-                        <form method="post" action="{% url 'decrease_cart_item' item.id %}">
-                            {% csrf_token %}
-                            <button type="submit" style="padding: 5px 10px; background-color: #eee; color: black; border: 1px solid #ccc; border-radius: 5px; cursor: pointer;">-</button>
-                        </form>
+                    <!-- زر الحذف -->
+                    <form method="post" action="{% url 'decrease_cart_item' item.id %}">
+                        {% csrf_token %}
+                        <button type="submit" style="background-color: #FF3D57; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 16px;">×</button>
+                    </form>
 
-                        <span style="margin: 0 10px; font-size: 16px;">{{ item.quantity }}</span>
+                    <!-- السعر والكمية -->
+                    <div style="flex: 1; text-align: right; margin-right: 15px;">
+                        <p style="font-size: 16px;">المجموع: {{ item.subtotal }} ريال</p>
 
-                        <form method="post" action="{% url 'increase_cart_item' item.id %}">
-                            {% csrf_token %}
-                            <button type="submit" style="padding: 5px 10px; background-color: #eee; color: black; border: 1px solid #ccc; border-radius: 5px; cursor: pointer;">+</button>
-                        </form>
+                        <div style="display: flex; align-items: center; justify-content: center; margin-top: 10px;">
+                            <form method="post" action="{% url 'decrease_cart_item' item.id %}">
+                                {% csrf_token %}
+                                <button type="submit" style="padding: 5px 10px; background-color: #eee; color: black; border: 1px solid #ccc; border-radius: 5px; cursor: pointer;">-</button>
+                            </form>
+
+                            <span style="margin: 0 10px; font-size: 16px;">{{ item.quantity }}</span>
+
+                            <form method="post" action="{% url 'increase_cart_item' item.id %}">
+                                {% csrf_token %}
+                                <button type="submit" style="padding: 5px 10px; background-color: #eee; color: black; border: 1px solid #ccc; border-radius: 5px; cursor: pointer;">+</button>
+                            </form>
+                        </div>
                     </div>
-                </div>
 
-                <!-- اسم المنتج والسعر -->
-                <div style="flex: 1; text-align: right;">
-                    <h3 style="margin-bottom: 5px;">{{ item.product.name }}</h3>
-                    <p style="font-size: 14px; color: #888;">{{ item.product.price }} ريال</p>
-                </div>
+                    <!-- اسم المنتج والسعر -->
+                    <div style="flex: 1; text-align: right;">
+                        <h3 style="margin-bottom: 5px;">{{ item.product.name }}</h3>
+                        <p style="font-size: 14px; color: #888;">{{ item.product.price }} ريال</p>
+                    </div>
 
-                <!-- صورة المنتج -->
-                {% if item.product.image %}
-                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-left: 10px;">
-                {% endif %}
+                    <!-- صورة المنتج -->
+                    {% if item.product.image %}
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                    {% endif %}
+
+                </div>
+            {% endfor %}
+
+            <!-- ملخص -->
+            <div style="margin-top: 30px; text-align: right;">
+                <p style="font-size: 18px; font-weight: bold;">ملخص السلة</p>
+
+                <p>المجموع: {{ total|floatformat:2 }} ريال</p>
+                <p>الضريبة (15%): {{ tax|floatformat:2 }} ريال</p>
+                <p style="font-size: 20px; font-weight: bold;">الإجمالي: {{ grand_total|floatformat:2 }} ريال</p>
+
+                <!-- زر إتمام الطلب -->
+                <a href="{% url 'checkout' %}" class="checkout-button">إتمام الطلب</a>
+
+                <!-- زر العودة للرئيسية -->
             </div>
-        {% endfor %}
 
-        <!-- ملخص -->
-        <div style="margin-top: 30px; text-align: right;">
-            <p style="font-size: 18px; font-weight: bold;">ملخص السلة</p>
+        {% else %}
+            <p style="font-size: 18px; margin-top: 20px;">سلة التسوق فارغة.</p>
+        {% endif %}
 
-            <p>المجموع: {{ total|floatformat:2 }} ريال</p>
-            <p>الضريبة (15%): {{ tax|floatformat:2 }} ريال</p>
-            <p style="font-size: 20px; font-weight: bold;">الإجمالي: {{ grand_total|floatformat:2 }} ريال</p>
-
-            <!-- زر إتمام الطلب -->
-            <a href="{% url 'checkout' %}" class="checkout-button" style="display: inline-block; margin-top: 15px; padding: 12px 24px; background-color: #FF3D57; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">إتمام الطلب</a>
-
-            <!-- زر العودة للرئيسية -->
-        </div>
-
-    {% else %}
-        <p>سلة التسوق فارغة.</p>
-    {% endif %}
-
-</div>
-
-
+    </div>
 
 </body>
 </html>

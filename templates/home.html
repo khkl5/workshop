@@ -1,0 +1,261 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>خدمات تصميم إبداعية</title>
+    <style>
+        body {
+            background-color: #FBF1EA;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .banner {
+            position: relative;
+            background-image: url("{% static 'images/banner.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            color: white;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .banner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(57, 195, 231, 0.4);
+        }
+
+        .banner-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .banner h2 {
+            font-size: 40px;
+            margin: 0;
+        }
+
+        .banner-content a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background-color: white;
+            color: #FF3D57;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .banner-content a:hover {
+            background-color: #FF3D57;
+            color: white;
+        }
+
+        .services {
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .service-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .service-card {
+            background-color: #39C3E7;
+            color: white;
+            width: 250px;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 10px;
+            box-sizing: border-box;
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-card h3 {
+            margin-bottom: 10px;
+        }
+
+        .service-card img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .banner h2 {
+                font-size: 28px;
+            }
+
+            .service-card {
+                width: 80%;
+                margin: 10px auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .banner {
+                height: 300px;
+                padding: 50px 10px;
+            }
+
+            .banner h2 {
+                font-size: 24px;
+            }
+
+            .service-card {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+{% if messages %}
+    <div id="welcome-popup" style="
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        padding: 30px 40px;
+        z-index: 9999;
+        text-align: center;
+        font-family: Arial, sans-serif;
+    ">
+        <div style="
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background-color: #39C3E7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        ">
+            <span style="font-size: 40px; color: white;">✓</span>
+        </div>
+
+        {% for message in messages %}
+            <h2 style="color: #333; margin-bottom: 10px;">{{ message }}</h2>
+        {% endfor %}
+
+        <button onclick="closePopup()" style="
+            margin-top: 15px;
+            padding: 12px 24px;
+            background-color: #4CD964;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        ">OK</button>
+    </div>
+
+    <script>
+        function closePopup() {
+            var popup = document.getElementById('welcome-popup');
+            if (popup) {
+                popup.style.display = 'none';
+            }
+        }
+
+        // auto close after 4 seconds
+        setTimeout(closePopup, 4000);
+    </script>
+{% endif %}
+
+
+
+    {% include 'header.html' %}
+
+    <section class="banner">
+        <div class="banner-overlay"></div>
+        <div class="banner-content">
+            <h2>نحو إبداع بصري مميز ✨</h2>
+            <p>خدمات تصميم احترافية تناسب جميع احتياجاتك</p>
+            <a href="/accounts/register/">سجل معنا</a>
+        </div>
+    </section>
+
+    <!-- قسم المنتجات -->
+    <section class="services" id="products">
+    <h2 style="color: #7857A8;">منتجاتنا</h2>
+    
+    <div class="service-container">
+        {% for product in products %}
+            <div class="service-card">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% endif %}
+                <h3>{{ product.name }}</h3>
+                <p>{{ product.description }}</p>
+                <p><strong>السعر: {{ product.price }} ريال</strong></p>
+
+                <!-- زر أضف للسلة -->
+                <form method="post" action="{% url 'add_to_cart' product.id %}" style="margin-top: 10px;">
+                    {% csrf_token %}
+                    <button type="submit" style="padding: 8px 16px; background-color: #23307E; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        🛒 أضف للسلة
+                    </button>
+                </form>
+            </div>
+        {% empty %}
+            <p>لا توجد منتجات حالياً.</p>
+        {% endfor %}
+    </div>
+</section>
+
+    
+
+    <!-- قسم الخدمات -->
+    <section class="services" id="services">
+        <h2 style="color: #7857A8;">خدماتنا</h2>
+        
+        <div class="service-container">
+            <div class="service-card">
+                <h3>تصميم شعارات</h3>
+                <p>ابتكر هوية بصرية قوية مع شعار إبداعي.</p>
+            </div>
+
+            <div class="service-card">
+                <h3>تصميم سوشيال ميديا</h3>
+                <p>تصاميم جذابة لزيادة التفاعل على السوشيال ميديا.</p>
+            </div>
+
+            <div class="service-card">
+                <h3>تصميم مطبوعات</h3>
+                <p>بطاقات عمل، بروشورات، فلاير بجودة عالية.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم التواصل -->
+    <section class="services" id="contact">
+        <h2 style="color: #7857A8;">تواصل معنا</h2>
+        <p>راسلنا عبر البريد الإلكتروني أو الواتساب لطلب الخدمة</p>
+    </section>
+
+    {% include 'footer.html' %}
+
+</body>
+</html>

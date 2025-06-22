@@ -1,13 +1,18 @@
 from pathlib import Path
-import os
+from decouple import config
 import cloudinary
 
+# المسار الأساسي
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-1hqwnmqu=nn8g2k1flew8j9ire(^0jg766#jur5_7h(b1xg89$'
+# سر التطبيق
+SECRET_KEY = config('SECRET_KEY')
 
-DEBUG = True
-ALLOWED_HOSTS = []
+# بيئة العمل: تطوير أو إنتاج
+DEBUG = config('DEBUG', default=True, cast=bool)
+
+# المضيفون المسموح لهم
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='').split(',')
 
 # التطبيقات المثبتة
 INSTALLED_APPS = [
@@ -17,7 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     'cloudinary',
 
     'products',
@@ -26,10 +31,10 @@ INSTALLED_APPS = [
 ]
 
 # إعدادات Cloudinary
-cloudinary.config( 
-    cloud_name = 'dppad5bqn', 
-    api_key = '732138356246461', 
-    api_secret = 'jUzgU97Po2b3dnxB00Y9102WKSc' 
+cloudinary.config(
+    cloud_name='dppad5bqn',
+    api_key='732138356246461',
+    api_secret='jUzgU97Po2b3dnxB00Y9102WKSc'
 )
 
 # Middleware
@@ -43,9 +48,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# روابط المشروع
 ROOT_URLCONF = 'workshop.urls'
 
-# القوالب
+# إعدادات القوالب
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -61,22 +67,43 @@ TEMPLATES = [
     },
 ]
 
+# WSGI
 WSGI_APPLICATION = 'workshop.wsgi.application'
 
-# قاعدة البيانات
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# إعداد قاعدة البيانات
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('DB_NAME'),
+            'USER': config('DB_USER'),
+            'PASSWORD': config('DB_PASSWORD'),
+            'HOST': config('DB_HOST'),
+            'PORT': config('DB_PORT', default='5432'),
+        }
+    }
 
 # تحقق كلمات المرور
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
 # اللغة والتوقيت
@@ -84,25 +111,22 @@ LANGUAGE_CODE = 'ar'
 TIME_ZONE = 'Asia/Riyadh'
 
 USE_I18N = True
+USE_L10N = True
 USE_TZ = True
 
 # الملفات الثابتة
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# الحقل الافتراضي
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ==== إعدادات الإيميل (Gmail SMTP) ====
-
-
+# إعدادات الإيميل (Gmail SMTP)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
-EMAIL_HOST_USER = 'khawlahalthafi@gmail.com'
-
-EMAIL_HOST_PASSWORD = 'nyrstbtakcnwvpet'
-
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_TIMEOUT = 20
-# (ملاحظة أمان: الأفضل استخدام متغير بيئة بدل كتابتها مباشرة)

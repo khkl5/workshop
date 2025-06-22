@@ -25,6 +25,7 @@
             justify-content: center;
             text-align: center;
             overflow: hidden;
+            padding: 20px;
         }
 
         .banner-overlay {
@@ -39,11 +40,12 @@
         .banner-content {
             position: relative;
             z-index: 1;
+            max-width: 90%;
         }
 
         .banner h2 {
             font-size: 40px;
-            margin: 0;
+            margin: 0 0 10px 0;
         }
 
         .banner-content a {
@@ -68,21 +70,28 @@
             text-align: center;
         }
 
+        .services h2 {
+            margin-bottom: 20px;
+        }
+
         .service-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+            gap: 20px;
         }
 
         .service-card {
             background-color: #39C3E7;
             color: white;
             width: 250px;
-            margin: 15px;
             padding: 20px;
             border-radius: 10px;
             box-sizing: border-box;
             transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .service-card:hover {
@@ -91,6 +100,7 @@
 
         .service-card h3 {
             margin-bottom: 10px;
+            font-size: 20px;
         }
 
         .service-card img {
@@ -99,36 +109,70 @@
             margin-bottom: 10px;
         }
 
+        .service-card p {
+            font-size: 16px;
+        }
+
+        .service-card button {
+            width: 100%;
+        }
+
         /* Responsive adjustments */
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
+            .banner {
+                height: 350px;
+            }
+
             .banner h2 {
-                font-size: 28px;
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .banner {
+                height: 300px;
+            }
+
+            .banner h2 {
+                font-size: 26px;
+            }
+
+            .banner-content a {
+                padding: 10px 20px;
             }
 
             .service-card {
                 width: 80%;
-                margin: 10px auto;
             }
         }
 
         @media (max-width: 480px) {
             .banner {
-                height: 300px;
-                padding: 50px 10px;
+                height: 250px;
+                padding: 30px 10px;
             }
 
             .banner h2 {
-                font-size: 24px;
+                font-size: 22px;
             }
 
             .service-card {
-                width: 90%;
+                width: 95%;
+            }
+
+            .service-card h3 {
+                font-size: 18px;
+            }
+
+            .service-card p {
+                font-size: 14px;
             }
         }
     </style>
 </head>
 <body>
-{% if messages %}
+
+    {% if messages %}
     <div id="welcome-popup" style="
         position: fixed;
         top: 50%;
@@ -179,12 +223,9 @@
             }
         }
 
-        // auto close after 4 seconds
         setTimeout(closePopup, 4000);
     </script>
-{% endif %}
-
-
+    {% endif %}
 
     {% include 'header.html' %}
 
@@ -199,38 +240,34 @@
 
     <!-- قسم المنتجات -->
     <section class="services" id="products">
-    <h2 style="color: #7857A8;">منتجاتنا</h2>
-    
-    <div class="service-container">
-        {% for product in products %}
-            <div class="service-card">
-                {% if product.image %}
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
-                {% endif %}
-                <h3>{{ product.name }}</h3>
-                <p>{{ product.description }}</p>
-                <p><strong>السعر: {{ product.price }} ريال</strong></p>
+        <h2 style="color: #7857A8;">منتجاتنا</h2>
+        <div class="service-container">
+            {% for product in products %}
+                <div class="service-card">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% endif %}
+                    <h3>{{ product.name }}</h3>
+                    <p>{{ product.description }}</p>
+                    <p><strong>السعر: {{ product.price }} ريال</strong></p>
 
-                <!-- زر أضف للسلة -->
-                <form method="post" action="{% url 'add_to_cart' product.id %}" style="margin-top: 10px;">
-                    {% csrf_token %}
-                    <button type="submit" style="padding: 8px 16px; background-color: #23307E; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                        🛒 أضف للسلة
-                    </button>
-                </form>
-            </div>
-        {% empty %}
-            <p>لا توجد منتجات حالياً.</p>
-        {% endfor %}
-    </div>
-</section>
-
-    
+                    <!-- زر أضف للسلة -->
+                    <form method="post" action="{% url 'add_to_cart' product.id %}" style="margin-top: 10px; width: 100%;">
+                        {% csrf_token %}
+                        <button type="submit" style="padding: 8px 16px; background-color: #23307E; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                            🛒 أضف للسلة
+                        </button>
+                    </form>
+                </div>
+            {% empty %}
+                <p>لا توجد منتجات حالياً.</p>
+            {% endfor %}
+        </div>
+    </section>
 
     <!-- قسم الخدمات -->
     <section class="services" id="services">
         <h2 style="color: #7857A8;">خدماتنا</h2>
-        
         <div class="service-container">
             <div class="service-card">
                 <h3>تصميم شعارات</h3>

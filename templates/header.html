@@ -1,21 +1,39 @@
-<header style="background-color: #23307E; color: #FBF1EA; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;">
+<header style="background-color: #23307E; color: #FBF1EA; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
     <div style="font-size: 24px; font-weight: bold;">
         خدمات تصميم إبداعية
     </div>
     
-    <nav style="display: flex; align-items: center;">
-        <a href="/" style="color: #FBF1EA; margin: 0 10px; text-decoration: none;">الرئيسية</a>
-        <a href="#services" style="color: #FBF1EA; margin: 0 10px; text-decoration: none;">الخدمات</a>
-        <a href="#contact" style="color: #FBF1EA; margin: 0 10px; text-decoration: none;">تواصل معنا</a>
+    <nav style="display: flex; align-items: center; flex-wrap: wrap;" id="main-nav">
+        <a href="/" style="color: #FBF1EA; margin: 10px; text-decoration: none;">الرئيسية</a>
+        <a href="#services" style="color: #FBF1EA; margin: 10px; text-decoration: none;">الخدمات</a>
+        <a href="#contact" style="color: #FBF1EA; margin: 10px; text-decoration: none;">تواصل معنا</a>
         
         <!-- أيقونة سلة التسوق -->
-        <a href="{% url 'cart' %}" style="color: #FBF1EA; margin: 0 10px; text-decoration: none; font-size: 22px;">
+        <a href="{% url 'cart' %}" style="color: #FBF1EA; margin: 10px; text-decoration: none; font-size: 22px;">
             🛒
         </a>
 
         <!-- أيقونة تسجيل الدخول -->
-        <a href="{% url 'login' %}" style="color: #FBF1EA; margin: 0 10px; text-decoration: none; font-size: 22px;">
+        <a href="{% url 'login' %}" style="color: #FBF1EA; margin: 10px; text-decoration: none; font-size: 22px;">
             👤
         </a>
     </nav>
+
+    <style>
+        /* ميديا كويري للشاشات الصغيرة */
+        @media (max-width: 768px) {
+            #main-nav {
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            #main-nav a {
+                width: 100%;
+                padding: 10px 0;
+                border-top: 1px solid rgba(255, 255, 255, 0.2);
+            }
+        }
+    </style>
 </header>
